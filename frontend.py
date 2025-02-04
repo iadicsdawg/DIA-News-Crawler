@@ -6,7 +6,6 @@ import os
 import pandas as pd
 import io
 
-# Set up page configuration
 st.set_page_config(
     page_title="Overseas Investment Crawler",
     page_icon="🌍",
@@ -73,22 +72,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Initialize Apify client (using Streamlit secrets management)
+# Initialize Apify client
 APIFY_TOKEN = st.secrets["APIFY_TOKEN"]
-
-# Sidebar configuration
-# with st.sidebar:
-#     st.header("Configuration ⚙️")
-#     st.info("Enter your Apify token here if using a custom actor:")
-#     custom_token = st.text_input("Apify Token", type="password")
-    
-#     st.markdown("---")
-#     st.subheader("Instructions 📖")
-#     st.write("""
-#         1. Enter URLs (one per line)
-#         2. Click 'Run Crawler'
-#         3. View results below
-#         """)
 
 # Main content area
 st.markdown('<h1 class="main-title">🌐 DIA Overseas Investment News Crawler</h1>', unsafe_allow_html=True)
@@ -146,7 +131,7 @@ def run_apify_actor(urls):
     "maxResults": 50,
     }
     
-    # Run the actor (using example actor ID)
+    # Run the actor
     with st.spinner("🚀 Gathering investment insights..."):
         run = client.actor("winning_ics/guides-part-2").call(run_input=run_input)
     
@@ -171,10 +156,8 @@ if st.button("Run Crawler 🚀"):
                 st.success(f"Found {len(results)} relevant articles!")
                 st.markdown("---")
 
-                # Convert results to a Pandas DataFrame
                 df = pd.DataFrame(results)
 
-                # Rename columns for better readability
                 df = df.rename(columns={
                     "content": "Content",
                     "date": "Date",
@@ -184,18 +167,17 @@ if st.button("Run Crawler 🚀"):
                     "url": "URL"
                 })
 
-                # Display results in an interactive table
                 st.dataframe(df, use_container_width=True)
 
                 # Save DataFrame to an Excel file in memory
                 excel_buffer = io.BytesIO()
                 df.to_excel(excel_buffer, index=False, sheet_name="Apify Results")
-                excel_buffer.seek(0)  # Move the pointer to the beginning of the buffer
+                excel_buffer.seek(0)  
 
                 st.markdown("### 📤 Export Results")
 
                 # Center the button
-                col1, col2, col3 = st.columns([1, 2, 1])  # Centered layout
+                col1, col2, col3 = st.columns([1, 2, 1]) 
                 with col2:
                     st.download_button(
                         label="📥 Download Results as Excel",
