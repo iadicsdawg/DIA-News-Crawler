@@ -22,7 +22,7 @@ APP_PASSWORD = st.secrets["APP_PASSWORD"]
 
 # Password-protected login screen
 def login():
-    st.title("🔒 Secure Access Required")
+    st.title("🔒 Password Required")
     password = st.text_input("Enter Password:", type="password")
 
     if password == APP_PASSWORD:
